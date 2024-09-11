@@ -17,8 +17,8 @@ rm -f $WRITE_RESULTS $READ_RESULTS
 for THREAD_COUNT in "${THREAD_COUNTS[@]}"; do
 
     echo "Running test with $THREAD_COUNT threads..."
-    # Run the bandwidth test with the specified number of threads
     OMP_NUM_THREADS=$THREAD_COUNT ./bandwidth_test -v 1
+    
 done
 
 echo "All tests completed. Results are saved in $WRITE_RESULTS and $READ_RESULTS."

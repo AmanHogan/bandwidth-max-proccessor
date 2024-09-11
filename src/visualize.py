@@ -51,7 +51,6 @@ def plot_heatmap(df, x_label, y_label, title, output_file, cmap="coolwarm", colo
 
 def main():
     
-      # Load data
     write_results = load_csv("../output/write_results.csv")
     read_results = load_csv("../output/read_results.csv")
     
@@ -62,8 +61,6 @@ def main():
     write_results['Optimization Type'] = write_results['Optimization Type'].str.strip()
     write_results['Threads'] = write_results['Threads'].astype(int)
     write_results['Bandwidth'] = write_results['Bandwidth'].astype(float)
-
-    
 
     # Pivot the DataFrame to reshape it
     pivot_df = write_results.pivot(index='Optimization Type', columns='Threads', values='Bandwidth')
@@ -77,17 +74,11 @@ def main():
 
     # Reorder the rows based on the desired order
     pivot_df = pivot_df.reindex(desired_order)
-
-    # Reorder columns if needed (optional)
     pivot_df = pivot_df.reindex(sorted(pivot_df.columns), axis=1)
-
-    # Save the reshaped DataFrame to a new CSV
     pivot_df.to_csv("../output/reshaped_write_results.csv")
 
     # Assign column names
     read_results.columns = ['Unroll Loop Size', 'Bandwidth']
-    
-    # Assign thread counts
     read_results = assign_thread_counts(read_results, rows_per_thread=5)
     
     # Clean up the data
@@ -97,8 +88,6 @@ def main():
     
     # Pivot and reorder read results
     pivot_read_df = read_results.pivot(index='Unroll Loop Size', columns='Threads', values='Bandwidth')
-    
-    # Save the reshaped DataFrame to a new CSV
     pivot_read_df.to_csv("../output/reshaped_read_results.csv")
 
 

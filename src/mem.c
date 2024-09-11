@@ -21,7 +21,7 @@ void write_zeros_non_temporal(double *vector, long len);
 int main(int argc, char *argv[]) 
 {
     // size of vector
-    unsigned long long N = 1000ULL * 1000 * 100; 
+    unsigned long long N = 1000ULL * 1000 * 1000; 
     double *vector = aligned_alloc(32, N * sizeof(double));
     double t1, t2, bandwidth_write;
     
