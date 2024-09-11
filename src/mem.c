@@ -21,26 +21,24 @@ void write_zeros_non_temporal(double *vector, long len);
 int main(int argc, char *argv[]) 
 {
     // size of vector
-    long N = 100 * 1000 * 1000; 
+    unsigned long long N = 1000ULL * 1000 * 100; 
     double *vector = aligned_alloc(32, N * sizeof(double));
+    double t1, t2, bandwidth_write;
     
     // numbers of threads for testing
-    int threads[] = {1, 2, 4, 6, 8, 16, omp_get_max_threads()}; 
+    int num_threads = omp_get_max_threads();
     
     // unroll loop sizes for testing
     int unroll_loops[] = {1, 2, 4, 8, 16}; 
     
     // number of tests to perform (reads)
     int U = sizeof(unroll_loops) / sizeof(unroll_loops[0]);
-    
-    // number of tests to perform (writes)
-    int T = sizeof(threads) / sizeof(threads[0]); 
-    
+
     // write file pointer
-    FILE *wfp = fopen("../output/write_results.csv", "w");
+    FILE *wfp = fopen("../output/write_results.csv", "a+");
     
     // read file pointer
-    FILE *rfp = fopen("../output/read_results.csv", "w"); 
+    FILE *rfp = fopen("../output/read_results.csv", "a+"); 
 
     if (vector == NULL) 
     {  
@@ -68,64 +66,60 @@ int main(int argc, char *argv[])
 
     if (verbose > 0) { printf("Running bandwidth test."); }
 
-    // Table Headers
-    fprintf(wfp, "Optimization Type,1 thread,2 threads,4 threads,6 threads,8 threads,16 threads,Max threads\n");
-    fprintf(rfp, "Unroll Loop Size,1 thread,2 threads,4 threads, threads 6,8 threads,16 threads,Max_threads\n");
-    
     /**
      * Performs no optimization on vector. 
      * Performs writes using various threads and logs bandwidth.
      */
-    fprintf(wfp, "No Optimization");
-    for (int t = 0; t < T; t++) 
-    {
-        omp_set_num_threads(threads[t]);
-        double t1 = omp_get_wtime();
-        write_ones(vector, N);
-        double t2 = omp_get_wtime();
-        
-        double bandwidth_write = N * sizeof(double) / 1e6 / (t2 - t1);
-        fprintf(wfp, ",%f", bandwidth_write);
-        if (verbose > 0) { printf("No Optimization, Threads: %d, Bandwidth: %f MB/s\n", threads[t], bandwidth_write); }
-    }
+    
+    //for (int t = 0; t < T; t++) 
+    fprintf(wfp, "No Optimization,%d", num_threads);
+    omp_set_num_threads(num_threads);
+    
+    t1 = omp_get_wtime();
+    write_ones(vector, N);
+    t2 = omp_get_wtime();
+    
+    bandwidth_write = N * sizeof(double) / 1e6 / (t2 - t1);
+    fprintf(wfp, ",%f", bandwidth_write);
+    if (verbose > 0) { printf("No Optimization, Threads: %d, Bandwidth: %f MB/s\n", num_threads, bandwidth_write); }
+    
     fprintf(wfp, "\n");
 
     /**
      * Sets vector to zero before timing.
      * Performs writes using various threads and logs bandwidth.
      */
-    fprintf(wfp, "Set Mem to Zero Before Timing");
-    for (int t = 0; t < T; t++) 
-    {
-        write_zeros(vector, N);
-        omp_set_num_threads(threads[t]);
-        double t1 = omp_get_wtime();
-        write_ones(vector, N);
-        double t2 = omp_get_wtime();
-        
-        double bandwidth_write = N * sizeof(double) / 1e6 / (t2 - t1);
-        fprintf(wfp, ",%f", bandwidth_write);
-        if (verbose > 0) { printf("Set Mem to Zero Before Timing, Threads: %d, Bandwidth: %f MB/s\n", threads[t], bandwidth_write); }
-    }
+    fprintf(wfp, "Set Mem to Zero Before Timing,%d", num_threads);
+    //for (int t = 0; t < T; t++) 
+    
+    write_zeros(vector, N);
+    omp_set_num_threads(num_threads);
+    t1 = omp_get_wtime();
+    write_ones(vector, N);
+    t2 = omp_get_wtime();
+    
+    bandwidth_write = N * sizeof(double) / 1e6 / (t2 - t1);
+    fprintf(wfp, ",%f", bandwidth_write);
+    if (verbose > 0) { printf("Set Mem to Zero Before Timing, Threads: %d, Bandwidth: %f MB/s\n", num_threads, bandwidth_write); }
+
     fprintf(wfp, "\n");
 
     /**
      * Sets vector to zero before timing.
      * Performs non-temporal writes using various threads and logs bandwidth.
      */
-    fprintf(wfp, "Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing");
-    for (int t = 0; t < T; t++) 
-    {
-        write_zeros_non_temporal(vector, N);
-        omp_set_num_threads(threads[t]);
-        double t1 = omp_get_wtime();
-        write_ones_non_temporal(vector, N);
-        double t2 = omp_get_wtime();
-        
-        double bandwidth_write = N * sizeof(double) / 1e6 / (t2 - t1);
-        fprintf(wfp, ",%f", bandwidth_write);
-        if (verbose > 0) { printf("Non-Temp + Mem Set, Threads: %d, Bandwidth: %f MB/s\n", threads[t], bandwidth_write); }
-    }
+    fprintf(wfp, "Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing,%d", num_threads);
+    
+    write_zeros_non_temporal(vector, N);
+    omp_set_num_threads(num_threads);
+    t1 = omp_get_wtime();
+    write_ones_non_temporal(vector, N);
+    t2 = omp_get_wtime();
+    
+    bandwidth_write = N * sizeof(double) / 1e6 / (t2 - t1);
+    fprintf(wfp, ",%f", bandwidth_write);
+    if (verbose > 0) { printf("Non-Temp + Mem Set, Threads: %d, Bandwidth: %f MB/s\n", num_threads, bandwidth_write); }
+
     fprintf(wfp, "\n");
     
     /**
@@ -136,16 +130,16 @@ int main(int argc, char *argv[])
     for (int u = 0; u < U; u++) 
     {
         fprintf(rfp, "%d", unroll_loops[u]);
-        for (int t = 0; t < T; t++) 
+        //for (int t = 0; t < T; t++) 
         {
-            omp_set_num_threads(threads[t]);
-            double t1 = omp_get_wtime();
+            omp_set_num_threads(num_threads);
+            t1 = omp_get_wtime();
             double sum = read_sum(vector, N, unroll_loops[u]);
-            double t2 = omp_get_wtime();
+            t2 = omp_get_wtime();
             
             double bandwidth_read = N * sizeof(double) / 1e6 / (t2 - t1);
             fprintf(rfp, ",%f", bandwidth_read);
-            if (verbose > 0) { printf("Unroll Size %d, Threads: %d, Bandwidth: %f MB/s\n",unroll_loops[u], threads[t], bandwidth_read); }
+            if (verbose > 0) { printf("Unroll Size %d, Threads: %d, Bandwidth: %f MB/s\n",unroll_loops[u], num_threads, bandwidth_read); }
         }
         fprintf(rfp, "\n");
     }

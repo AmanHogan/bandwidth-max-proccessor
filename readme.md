@@ -20,13 +20,11 @@ Navigate to the `src` directory.
 
 In your terminal: `gcc -fopenmp -O3 -march=native -o bandwidth_test mem.c`
 
-Then run `./bandwidth_test`.
+Then run `bash run_tests.sh`.
 
-You can optional run `./bandwidth_test -v 1` to get more verbose output.
+You can visualize your data in graph and table format using the python script I made. To do this run: `python3 visualize.py `
 
-You can visualize your data using the python script I made. To do this run: `python3 visualize.py `
-
-All output should be located in the `output` directory. `output2` is just a re-run of the program to test the consistency.
+All output should be located in the `output` directory.
 
 # Results
 Proccessors: Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz

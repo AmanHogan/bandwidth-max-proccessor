@@ -1,0 +1,18 @@
+No Optimization,1,1973.435715
+Set Mem to Zero Before Timing,1,8485.809857
+Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing,1,18314.723254
+No Optimization,2,3770.683061
+Set Mem to Zero Before Timing,2,6085.867691
+Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing,2,18273.781861
+No Optimization,4,6946.821734
+Set Mem to Zero Before Timing,4,11436.628351
+Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing,4,59054.075627
+No Optimization,8,12593.103729
+Set Mem to Zero Before Timing,8,38367.618791
+Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing,8,36031.045097
+No Optimization,16,17088.525623
+Set Mem to Zero Before Timing,16,57873.261127
+Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing,16,117639.496796
+No Optimization,56,18284.503491
+Set Mem to Zero Before Timing,56,56287.835273
+Non-Temporal Writes + Set Mem to Set Mem to Zero Before Timing,56,109589.769384

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
+
 /**
  * Author: Charles Garrett
  * Summary: Boilerplate code provided to get started for testing the maximum bandwtdh

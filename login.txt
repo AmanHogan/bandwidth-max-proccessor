@@ -1,0 +1,6 @@
+gcc -fopenmp -O3 -march=native -o bandwidth_test mem.c 
+./bandwidth_test -v 1 
+python3 visualize.py 
+gcc -fopenmp -O3 -march=native -o basic_test basic.c
+./basic_test
+bash run_tests.sh
