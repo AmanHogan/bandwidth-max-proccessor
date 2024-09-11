@@ -71,7 +71,6 @@ int main(int argc, char *argv[])
      * Performs writes using various threads and logs bandwidth.
      */
     
-    //for (int t = 0; t < T; t++) 
     fprintf(wfp, "No Optimization,%d", num_threads);
     omp_set_num_threads(num_threads);
     
@@ -90,7 +89,6 @@ int main(int argc, char *argv[])
      * Performs writes using various threads and logs bandwidth.
      */
     fprintf(wfp, "Set Mem to Zero Before Timing,%d", num_threads);
-    //for (int t = 0; t < T; t++) 
     
     write_zeros(vector, N);
     omp_set_num_threads(num_threads);
@@ -130,7 +128,6 @@ int main(int argc, char *argv[])
     for (int u = 0; u < U; u++) 
     {
         fprintf(rfp, "%d", unroll_loops[u]);
-        //for (int t = 0; t < T; t++) 
         {
             omp_set_num_threads(num_threads);
             t1 = omp_get_wtime();
