@@ -21,6 +21,7 @@ def plot_line_graph(df, x_label, y_label, title, output_file):
     """Plot a line graph with multiple series."""
     thread_columns = df.columns[1:]
     plt.figure(figsize=(10, 6))
+    print(df)
     
     for _, row in df.iterrows():
         plt.plot(thread_columns, row[1:], marker='o', label=row[0])
@@ -111,7 +112,7 @@ def main():
     # Plot line graph for write results
     plot_line_graph(
         df=write_results,
-        x_label='Number of Threads',
+        x_label='Number of Threads (1=1, 2=2, 3=4, 4=8, 5=16, 6=max(56))',
         y_label='Bandwidth (MB/s)',
         title='Bandwidth vs Number of Threads',
         output_file='../output/write_line_graph.png'
@@ -120,7 +121,7 @@ def main():
     # Plot heatmap for read results
     plot_heatmap(
         df=read_results,
-        x_label='Number of Threads',
+        x_label='Number of Threads (1=1, 2=2, 3=4, 4=8, 5=16, 6=max(56))',
         y_label='Unroll Loop Size',
         title='Heatmap of Bandwidth vs Unroll Loop Size and Threads',
         output_file='../output/read_heatmap.png'
@@ -129,7 +130,7 @@ def main():
     # Plot heatmap for write results with a custom color map
     plot_heatmap(
         df=write_results,
-        x_label='Number of Threads',
+        x_label='Number of Threads (1=1, 2=2, 3=4, 4=8, 5=16, 6=max(56))',
         y_label='Optimization Type',
         title='Heatmap of Write Bandwidth vs Optimization and Threads',
         output_file='../output/write_heatmap.png',
